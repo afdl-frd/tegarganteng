@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Toko Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-white min-h-screen">
+
+    <header class="bg-slate-900 border-b border-slate-800 p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="font-bold text-xl text-red-500">ADMIN PANEL</h1>
+            <button onclick="loadAdminData()" class="text-xs bg-slate-800 px-3 py-1 rounded hover:bg-slate-700">🔄 Refresh Data</button>
+        </div>
+    </header>
+
+    <!-- Navigasi Game di Admin -->
+    <nav class="bg-slate-900/80 border-b border-slate-800 py-3">
+        <div class="max-w-6xl mx-auto flex gap-4 overflow-x-auto px-4 text-sm font-medium">
+            <button onclick="switchAdminTab('Mobile Legends')" id="admin-btn-ml" class="admin-tab-btn bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                Mobile Legends <span id="badge-ml" class="bg-red-500 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchAdminTab('Free Fire')" id="admin-btn-ff" class="admin-tab-btn bg-slate-800 text-slate-300 px-4 py-2 rounded-lg flex items-center gap-2">
+                Free Fire <span id="badge-ff" class="bg-red-500 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchAdminTab('PES')" id="admin-btn-pes" class="admin-tab-btn bg-slate-800 text-slate-300 px-4 py-2 rounded-lg flex items-center gap-2">
+                PES <span id="badge-pes" class="bg-red-500 text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Daftar Pesanan / Request Masuk -->
+    <main class="max-w-6xl mx-auto p-4 mt-4">
+        <h2 id="current-game-title" class="text-lg font-bold mb-4">Daftar Transaksi: Mobile Legends</h2>
+        
+        <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-xl">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-800 text-slate-400 border-b border-slate-700">
+                    <tr>
+                        <th class="p-3">Waktu</th>
+                        <th class="p-3">Tipe / Produk</th>
+                        <th class="p-3">Data Pemesan / ID</th>
+                        <th class="p-3">No. WA</th>
+                        <th class="p-3">Status Pembayaran</th>
+                        <th class="p-3">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-table-body">
+                    <tr>
+                        <td colspan="6" class="p-4 text-center text-slate-500">Memuat data dari Google Sheets...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Script Admin -->
+    <script src="../js/config.js"></script>
+    <script>
+        let currentSelectedGame = 'Mobile Legends';
+        let allTransactions = [];
+
+        function switchAdminTab(gameName) {
+            currentSelectedGame = gameName;
+            document.getElementById('current-game-title').innerText = `Daftar Transaksi: ${gameName}`;
+            
+            // Ubah warna tombol aktif
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            const activeId = gameName === 'Mobile Legends' ? 'ml' : gameName === 'Free Fire' ? 'ff' : 'pes';
+            const btn = document.getElementById(`admin-btn-${activeId}`);
+            btn.classList.remove('bg-slate-800', 'text-slate-300');
+            btn.classList.add('bg-blue-600', 'text-white');
+
+            renderTable();
+        }
+
+        function loadAdminData() {
+            // Ambil data dari Google Apps Script (Pastikan fungsi doGet di Apps Script mengembalikan JSON data)
+            fetch(CONFIG.GOOGLE_SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    allTransactions = data;
+                    updateBadges();
+                    renderTable();
+                })
+                .catch(err => {
+                    console.error('Gagal memuat data:', err);
+                    document.getElementById('transaction-table-body').innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-400">Gagal terhubung ke Google Sheets.</td></tr>`;
+                });
+        }
+
+        function updateBadges() {
+            const mlCount = allTransactions.filter(item => item.game === 'Mobile Legends' && item.status !== 'Sudah Dibayar').length;
+            const ffCount = allTransactions.filter(item => item.game === 'Free Fire' && item.status !== 'Sudah Dibayar').length;
+            const pesCount = allTransactions.filter(item => item.game === 'PES' && item.status !== 'Sudah Dibayar').length;
+
+            document.getElementById('badge-ml').innerText = mlCount;
+            document.getElementById('badge-ff').innerText = ffCount;
+            document.getElementById('badge-pes').innerText = pesCount;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('transaction-table-body');
+            const filtered = allTransactions.filter(item => item.game === currentSelectedGame);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">Belum ada transaksi / request untuk game ini.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(item => `
+                <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                    <td class="p-3 text-slate-400 text-xs">${item.timestamp || '-'}</td>
+                    <td class="p-3 font-semibold">${item.product || item.detail}</td>
+                    <td class="p-3">${item.targetId || item.name}</td>
+                    <td class="p-3"><a href="https://wa.me/${item.phone}" target="_blank" class="text-green-400 underline">${item.phone}</a></td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded text-xs ${item.status === 'Sudah Dibayar' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td class="p-3">
+                        <button onclick="markAsPaid('${item.id}')" class="bg-blue-600 hover:bg-blue-500 text-xs px-3 py-1 rounded">Set Sudah Dibayar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Jalankan saat halaman dibuka
+        window.onload = loadAdminData;
+    </script>
+</body>
+</html>

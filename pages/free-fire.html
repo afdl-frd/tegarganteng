@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top-Up Mobile Legends</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+
+    <!-- Navbar / Header -->
+    <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="font-bold text-lg text-blue-400">STORE MLBB</h1>
+            <button onclick="location.href='../index.html'" class="text-sm bg-slate-700 px-3 py-1 rounded hover:bg-slate-600">← Kembali</button>
+        </div>
+    </header>
+
+    <!-- Navigasi 4 Menu Utama -->
+    <nav class="bg-slate-800/50 border-b border-slate-800 py-3">
+        <div class="max-w-4xl mx-auto flex justify-around text-sm font-medium">
+            <button onclick="switchTab('home')" id="btn-home" class="tab-btn text-blue-400 border-b-2 border-blue-400 pb-1">1. Home</button>
+            <button onclick="switchTab('topup')" id="btn-topup" class="tab-btn text-slate-400 pb-1">2. Top-Up</button>
+            <button onclick="switchTab('request')" id="btn-request" class="tab-btn text-slate-400 pb-1">3. Request Akun</button>
+            <button onclick="switchTab('bantuan')" id="btn-bantuan" class="tab-btn text-slate-400 pb-1">4. Bantuan</button>
+        </div>
+    </nav>
+
+    <!-- Konten Utama -->
+    <main class="max-w-4xl mx-auto p-4 mt-4">
+
+        <!-- TAB 1: HOME -->
+        <div id="tab-home" class="tab-content space-y-4">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h2 class="text-xl font-bold mb-2">Selamat Datang di Toko Mobile Legends</h2>
+                <p class="text-slate-300 text-sm">Kami menyediakan layanan Top-Up Diamond legal, Starlight Member, serta jasa cari akun / joki terpercaya dan cepat.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center">
+                    <p class="text-slate-400 text-xs">Proses</p>
+                    <p class="font-bold text-green-400 mt-1">1-3 Menit Otomatis</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center">
+                    <p class="text-slate-400 text-xs">Keamanan</p>
+                    <p class="font-bold text-blue-400 mt-1">100% Aman & Legal</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TOP-UP -->
+        <div id="tab-topup" class="tab-content hidden space-y-4">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h2 class="text-lg font-bold mb-4">Pilih Nominal Diamond</h2>
+                
+                <!-- Pilihan Produk -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                    <div onclick="selectProduct('86 Diamond', 20000)" class="product-card bg-slate-900 border border-slate-700 p-3 rounded-lg cursor-pointer hover:border-blue-500">
+                        <p class="font-bold">86 Diamond</p>
+                        <p class="text-blue-400 text-sm">Rp 20.000</p>
+                    </div>
+                    <div onclick="selectProduct('172 Diamond', 40000)" class="product-card bg-slate-900 border border-slate-700 p-3 rounded-lg cursor-pointer hover:border-blue-500">
+                        <p class="font-bold">172 Diamond</p>
+                        <p class="text-blue-400 text-sm">Rp 40.000</p>
+                    </div>
+                    <div onclick="selectProduct('Starlight Member', 149000)" class="product-card bg-slate-900 border border-slate-700 p-3 rounded-lg cursor-pointer hover:border-blue-500">
+                        <p class="font-bold">Starlight</p>
+                        <p class="text-blue-400 text-sm">Rp 149.000</p>
+                    </div>
+                </div>
+
+                <!-- Bagian Form Muncul Setelah Produk Dipilih -->
+                <div id="form-topup-section" class="hidden border-t border-slate-700 pt-4 space-y-4">
+                    <p id="selected-info" class="text-sm text-yellow-400 font-semibold"></p>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">User ID & Server ID (Contoh: 12345678 (1234))</label>
+                        <input type="text" id="game-id" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white" placeholder="Masukkan ID (Server)">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Nomor HP / WhatsApp</label>
+                        <input type="text" id="phone-topup" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white" placeholder="08xxxxxxxxxx">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Metode Pembayaran</label>
+                        <select id="payment-method" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white">
+                            <option value="QRIS">QRIS (All Payment)</option>
+                            <option value="DANA">DANA</option>
+                        </select>
+                    </div>
+                    <button onclick="submitTopup('Mobile Legends')" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-2 rounded text-sm transition">Bayar & Kirim Pesanan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: REQUEST AKUN -->
+        <div id="tab-request" class="tab-content hidden space-y-4">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                <h2 class="text-lg font-bold">Request Kriteria Akun / Joki</h2>
+                <p class="text-xs text-slate-400">Isi kriteria akun yang Anda cari. Data akan dikirim ke database admin & terhubung otomatis ke WhatsApp.</p>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Nama Pemesan</label>
+                    <input type="text" id="req-name" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white" placeholder="Nama Anda">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Nomor WhatsApp</label>
+                    <input type="text" id="req-phone" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white" placeholder="08xxxxxxxxxx">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Detail Kriteria Akun yang Dicari</label>
+                    <textarea id="req-detail" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white" placeholder="Contoh: Cari akun skin Epic ML minimal 10, rank Mythic, budget 300rb"></textarea>
+                </div>
+                <button onclick="submitRequest('Mobile Legends')" class="w-full bg-green-600 hover:bg-green-500 font-bold py-2 rounded text-sm transition">Kirim Request ke Admin & WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- TAB 4: BANTUAN -->
+        <div id="tab-bantuan" class="tab-content hidden space-y-4">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h2 class="text-lg font-bold mb-2">Bantuan & Informasi</h2>
+                <p class="text-slate-300 text-sm">Jika pesanan belum masuk dalam 5 menit, silakan hubungi admin melalui WhatsApp resmi kami dengan melampirkan bukti transfer.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script Pendukung -->
+    <script src="../js/config.js"></script>
+    <script>
+        // Fungsi Tab Navigasi
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400');
+                btn.classList.add('text-slate-400');
+            });
+            
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabName);
+            activeBtn.classList.remove('text-slate-400');
+            activeBtn.classList.add('text-blue-400', 'border-b-2', 'border-blue-400');
+        }
+
+        let selectedProductData = null;
+        function selectProduct(name, price) {
+            selectedProductData = { name, price };
+            document.getElementById('selected-info').innerText = `Dipilih: ${name} (Rp ${price.toLocaleString()})`;
+            document.getElementById('form-topup-section').classList.remove('hidden');
+        }
+
+        // Fungsi Kirim Topup ke Google Sheets
+        function submitTopup(gameName) {
+            const gameId = document.getElementById('game-id').value;
+            const phone = document.getElementById('phone-topup').value;
+            const payment = document.getElementById('payment-method').value;
+
+            if (!gameId || !phone || !selectedProductData) {
+                alert('Mohon lengkapi data ID dan Nomor HP!');
+                return;
+            }
+
+            const data = {
+                type: 'topup',
+                game: gameName,
+                product: selectedProductData.name,
+                price: selectedProductData.price,
+                targetId: gameId,
+                phone: phone,
+                payment: payment,
+                status: 'Belum Dibayar' // Status awal
+            };
+
+            fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(() => {
+                alert('Pesanan berhasil dibuat! Silakan selesaikan pembayaran.');
+                // Redirect ke WhatsApp Penjual (Opsional)
+                const waMessage = `Halo Admin, saya memesan ${gameName} - ${selectedProductData.name}.\nID: ${gameId}\nPembayaran: ${payment}`;
+                window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(waMessage)}`, '_blank');
+            }).catch(err => {
+                alert('Terjadi kesalahan koneksi.');
+            });
+        }
+
+        // Fungsi Kirim Request Akun
+        function submitRequest(gameName) {
+            const name = document.getElementById('req-name').value;
+            const phone = document.getElementById('req-phone').value;
+            const detail = document.getElementById('req-detail').value;
+
+            if (!name || !phone || !detail) {
+                alert('Mohon lengkapi semua kolom request!');
+                return;
+            }
+
+            const data = {
+                type: 'request',
+                game: gameName,
+                name: name,
+                phone: phone,
+                detail: detail,
+                status: 'Pending'
+            };
+
+            fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(() => {
+                alert('Request akun berhasil dikirim ke Admin!');
+                const waMessage = `Halo Admin, saya ${name} ingin request akun ${gameName}.\nDetail: ${detail}`;
+                window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(waMessage)}`, '_blank');
+            });
+        }
+    </script>
+</body>
+</html>
